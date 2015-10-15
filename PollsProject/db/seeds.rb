@@ -5,6 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+
 ActiveRecord::Base.transaction do
   jake = User.create!(
     :user_name  => "j3uddha",
@@ -36,6 +38,10 @@ ActiveRecord::Base.transaction do
     # :poll_id  => second_poll.id
   )
 
+  third_question =  second_poll.questions.create!(
+    :text => "Varus, Poppy, Renekton?"
+  )
+
   first_answer_choice = first_question.answer_choices.create!(
     :text => "League of Legends"
   #:question_id => first_question.id
@@ -58,6 +64,21 @@ ActiveRecord::Base.transaction do
 
   fifth_answer_choice = second_question.answer_choices.create!(
     :text => "Zed"
+  #:question_id => second_question.id
+  )
+
+  sixth_answer_choice = third_question.answer_choices.create!(
+    :text => "Varus"
+  #:question_id => second_question.id
+  )
+
+  seventh_answer_choice = third_question.answer_choices.create!(
+    :text => "Poppy"
+  #:question_id => second_question.id
+  )
+
+  eigth_answer_choice = third_question.answer_choices.create!(
+    :text => "Renekton"
   #:question_id => second_question.id
   )
 

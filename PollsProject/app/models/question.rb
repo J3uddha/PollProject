@@ -1,5 +1,4 @@
 class Question < ActiveRecord::Base
-  validates :poll_id, uniqueness: true
   validates :poll_id, :text, presence: true
 
   has_many(
@@ -45,48 +44,48 @@ class Question < ActiveRecord::Base
   #   poll_counts
   # end
 
-  # SQL version
 
-  def results
-    choices_w_counts = ActiveRecord::Base.connection.execute(<<-SQL)
-                    SELECT
-                      answer_choices.*, COUNT(responses.id) AS choice_count
-                    FROM
-                      answer_choices
-                    LEFT OUTER JOIN
-                      responses
-                    ON
-                      responses.answerchoice_id = answer_choices.id
-                    WHERE
-                      answer_choices.question_id = #{self.id}
-                    GROUP BY
-                      answer_choices.id
-                    SQL
-
-    # poll_counts = {}
-    # choices_w_counts.each do |choice|
-    #    poll_counts[choice.text] = choice.choice_count
-    #  end
-    #
-    # poll_counts
-  end
+  # SQL LOGIC
+  # def results
+  #   choices_w_counts = ActiveRecord::Base.connection.execute(<<-SQL)
+  #                   SELECT
+  #                     answer_choices.*, COUNT(responses.id) AS choice_count
+  #                   FROM
+  #                     answer_choices
+  #                   LEFT OUTER JOIN
+  #                     responses
+  #                   ON
+  #                     responses.answerchoice_id = answer_choices.id
+  #                   WHERE
+  #                     answer_choices.question_id = #{self.id}
+  #                   GROUP BY
+  #                     answer_choices.id
+  #                   SQL
+  #
+  #   # poll_counts = {}
+  #   # choices_w_counts.each do |choice|
+  #   #    poll_counts[choice.text] = choice.choice_count
+  #   #  end
+  #   #
+  #   # poll_counts
+  # end
 
 
 #AWESOMENESS!
-  # def results
-  #   choices_w_counts = self
-  #                   .answer_choices
-  #                   .select("answer_choices.*, COUNT(responses.id) AS choice_count")
-  #                   .joins(<<-SQL).group("answer_choices.id")
-  #                   LEFT OUTER JOIN
-  #                     responses ON responses.answerchoice_id = answer_choices.id
-  #                   SQL
-  #   poll_counts = {}
-  #   choices_w_counts.each do |choice|
-  #      poll_counts[choice.text] = choice.choice_count
-  #    end
-  #
-  #   poll_counts
-  # end
+  def results
+    choices_w_counts = self
+                    .answer_choices
+                    .select("answer_choices.*, COUNT(responses.id) AS choice_count")
+                    .joins(<<-SQL).group("answer_choices.id")
+                    LEFT OUTER JOIN
+                      responses ON responses.answerchoice_id = answer_choices.id
+                    SQL
+    poll_counts = {}
+    choices_w_counts.each do |choice|
+       poll_counts[choice.text] = choice.choice_count
+     end
+
+    poll_counts
+  end
 
 end

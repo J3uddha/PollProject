@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015143252) do
+ActiveRecord::Schema.define(version: 20151015143638) do
 
   create_table "answer_choices", force: true do |t|
     t.text     "text"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20151015143252) do
     t.datetime "updated_at"
   end
 
+  add_index "answer_choices", ["question_id"], name: "index_answer_choices_on_question_id"
+
   create_table "polls", force: true do |t|
     t.string   "title"
     t.integer  "author_id"
@@ -27,12 +29,16 @@ ActiveRecord::Schema.define(version: 20151015143252) do
     t.datetime "updated_at"
   end
 
+  add_index "polls", ["author_id"], name: "index_polls_on_author_id"
+
   create_table "questions", force: true do |t|
     t.text     "text"
     t.integer  "poll_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "questions", ["poll_id"], name: "index_questions_on_poll_id"
 
   create_table "responses", force: true do |t|
     t.integer  "answerchoice_id"
@@ -42,11 +48,18 @@ ActiveRecord::Schema.define(version: 20151015143252) do
     t.datetime "updated_at"
   end
 
+  add_index "responses", ["answerchoice_id", "user_id"], name: "index_responses_on_answerchoice_id_and_user_id", unique: true
+  add_index "responses", ["answerchoice_id"], name: "index_responses_on_answerchoice_id"
+  add_index "responses", ["question_id"], name: "index_responses_on_question_id"
+  add_index "responses", ["user_id"], name: "index_responses_on_user_id"
+
   create_table "users", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "user_name"
     t.string   "#<ActiveRecord::ConnectionAdapters::TableDefinition:0x007fe91ae0b248>"
   end
+
+  add_index "users", ["user_name"], name: "index_users_on_user_name", unique: true
 
 end

@@ -1,4 +1,7 @@
 class Poll < ActiveRecord::Base
+  validates :author_id, :title, presence: true
+
+  # belongs_to :author, :class_name => "User"
   belongs_to(
     :author,
     class_name: "User",
@@ -6,6 +9,7 @@ class Poll < ActiveRecord::Base
     primary_key: :id
   )
 
+  # has_many :questions, :foreign_key => :poll_id
   has_many(
     :questions,
     class_name: "Question",
